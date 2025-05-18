@@ -1,33 +1,33 @@
-# Graph-Log: 自動運転フィールドエンジニア向け統合アプリケーション
+# Graph-Log: Integrated Application for Autonomous Vehicle Field Engineers
 
-## 概要
-Graph-Logは、自動運転車両のフィールドエンジニアのための包括的なツールスイートです。データログの解析、レポート作成、画像・動画処理、システムコマンド参照などの機能を1つのアプリケーションに統合しています。
+## Overview
+Graph-Log is a comprehensive tool suite for autonomous vehicle field engineers. It integrates various functionalities such as data log analysis, report generation, image/video processing, and system command reference into a single application.
 
-## 主な機能
-- 自然言語によるデータログ解析
-- AIを活用したレポート自動生成
-- 画像・動画処理ツール
-- Linux/ROSコマンドクイックリファレンス
-- RAG（Retrieval-Augmented Generation）による知識ベース検索
+## Key Features
+- Natural Language Data Log Analysis
+- AI-Powered Report Generation
+- Image and Video Processing Tools
+- Linux/ROS Command Quick Reference
+- Knowledge Base Search with RAG (Retrieval-Augmented Generation)
 
-## 技術スタック
-- フロントエンド: Next.js, TypeScript, Material-UI
-- データ処理: OpenCV.js, D3.js
+## Tech Stack
+- Frontend: Next.js, TypeScript, Material-UI
+- Data Processing: OpenCV.js, D3.js
 - AI/ML: LangChain, OpenAI
-- データ可視化: Chart.js
+- Data Visualization: Chart.js
 
-## セットアップ
+## Setup
 ```bash
-# 依存関係のインストール
+# Install dependencies
 npm install
 
-# 開発サーバーの起動
+# Start development server
 npm run dev
 ```
 
-## 環境要件
-- Node.js 18.0.0以上
-- NPM 8.0.0以上
+## Requirements
+- Node.js 18.0.0 or higher
+- NPM 8.0.0 or higher
 
-## ライセンス
+## License
 MIT License 
