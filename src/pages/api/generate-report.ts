@@ -1,14 +1,48 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { OpenAI } from 'openai';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// レポートテンプレートIDに基づいてシステムプロンプトを生成
+const getSystemPrompt = (templateId: string): string => {
+  const basePrompt = `あなたはフィールドエンジニア向けの報告書作成支援AIです。
+専門的かつ簡潔な文体でレポートを作成してください。
+実際のデータや事実を基にしたレポートの作成を心がけてください。`;
 
-const templateInstructions = {
-  incident: "自動運転車両の事故・インシデントレポートを作成してください。以下の項目について詳細に記述してください：インシデントの概要、発生時刻、場所、詳細な状況、対応措置、今後の対策。",
-  maintenance: "自動運転車両の定期メンテナンスレポートを作成してください。以下の項目について詳細に記述してください：点検の概要、実施日時、点検項目、結果、特記事項、次回点検予定。",
-  test: "自動運転車両のテスト走行レポートを作成してください。以下の項目について詳細に記述してください：テストの概要、実施日時、天候・路面状況、テスト項目、結果、課題・改善点。"
+  switch (templateId) {
+    case 'incident':
+      return `${basePrompt}
+事故・インシデントレポートの作成を行います。
+以下の項目を埋める形で、マークダウン形式のレポートを作成してください：
+- インシデント概要: 何が起きたかを簡潔に説明
+- 発生時刻: いつ問題が発生したか
+- 場所: どこで発生したか
+- 詳細: 何が起きたか、どのような影響があったかを詳細に説明
+- 対応措置: どのような対応を行ったか
+- 今後の対策: 再発防止のためにどのような対策を取るべきか`;
+
+    case 'maintenance':
+      return `${basePrompt}
+定期メンテナンスレポートの作成を行います。
+以下の項目を埋める形で、マークダウン形式のレポートを作成してください：
+- 点検概要: どのような点検を行ったか
+- 実施日時: いつ点検を行ったか
+- 点検項目: 何を点検したか（リスト形式で）
+- 結果: 点検結果（問題点があれば詳細に）
+- 特記事項: 特に注意すべき点、改善すべき点
+- 次回点検予定: 次回の点検予定日`;
+
+    case 'test':
+      return `${basePrompt}
+テスト走行レポートの作成を行います。
+以下の項目を埋める形で、マークダウン形式のレポートを作成してください：
+- テスト概要: どのようなテストを実施したか
+- 実施日時: いつテストを行ったか
+- 天候・路面状況: テスト時の環境条件
+- テスト項目: 何をテストしたか（リスト形式で）
+- 結果: テスト結果と発見された問題点
+- 課題・改善点: 今後改善すべき点`;
+
+    default:
+      return basePrompt;
+  }
 };
 
 export default async function handler(
@@ -16,31 +50,52 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
+    return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
   try {
-    const { template, content } = req.body;
+    const { template, content, prompt } = req.body;
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4-turbo-preview",
-      messages: [
-        {
-          role: "system",
-          content: templateInstructions[template as keyof typeof templateInstructions]
-        },
-        {
-          role: "user",
-          content: content
-        }
-      ],
+    if (!template || !content) {
+      return res.status(400).json({ error: 'テンプレートとコンテンツは必須です' });
+    }
+
+    // APIキーの確認
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      return res.status(500).json({ error: 'API Key が設定されていません' });
+    }
+
+    const systemPrompt = getSystemPrompt(template);
+    
+    // OpenAI APIを呼び出し
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4-turbo-preview',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: `以下のレポートの雛形を具体的な内容で埋めてください:\n\n${content}${prompt ? `\n\n追加指示: ${prompt}` : ''}` }
+        ],
+        temperature: 0.7
+      })
     });
 
-    return res.status(200).json({
-      report: completion.choices[0].message.content
-    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(`OpenAI API error: ${JSON.stringify(error)}`);
+    }
+
+    const data = await response.json();
+    const generatedReport = data.choices[0].message.content;
+
+    res.status(200).json({ report: generatedReport });
   } catch (error) {
-    console.error('Error generating report:', error);
-    return res.status(500).json({ message: 'Error generating report' });
+    console.error('Report generation error:', error);
+    res.status(500).json({ error: `レポート生成に失敗しました: ${error.message}` });
   }
 } 

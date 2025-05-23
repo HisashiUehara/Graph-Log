@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   TextField,
@@ -10,7 +10,9 @@ import {
   Select,
   MenuItem,
   FormControl,
-  InputLabel
+  InputLabel,
+  SelectChangeEvent,
+  Alert
 } from '@mui/material';
 import ReactMarkdown from 'react-markdown';
 
@@ -38,14 +40,33 @@ const templates: ReportTemplate[] = [
   }
 ];
 
-const ReportGenerator: React.FC = () => {
+interface ReportGeneratorProps {
+  initialTemplate?: string;
+  initialPrompt?: string;
+}
+
+const ReportGenerator: React.FC<ReportGeneratorProps> = ({ initialTemplate, initialPrompt }) => {
   const [selectedTemplate, setSelectedTemplate] = useState('');
   const [reportContent, setReportContent] = useState('');
   const [loading, setLoading] = useState(false);
   const [generatedReport, setGeneratedReport] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [customPrompt, setCustomPrompt] = useState(initialPrompt || '');
 
-  const handleTemplateChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    const templateId = event.target.value as string;
+  // 初期テンプレートがある場合は設定
+  useEffect(() => {
+    if (initialTemplate) {
+      setSelectedTemplate(initialTemplate);
+      const template = templates.find(t => t.id === initialTemplate);
+      if (template) {
+        setReportContent(template.template);
+      }
+    }
+  }, [initialTemplate]);
+
+  const handleTemplateChange = (event: SelectChangeEvent<string>) => {
+    const templateId = event.target.value;
     setSelectedTemplate(templateId);
     const template = templates.find(t => t.id === templateId);
     if (template) {
@@ -55,8 +76,11 @@ const ReportGenerator: React.FC = () => {
 
   const handleGenerateReport = async () => {
     setLoading(true);
+    setErrorMessage('');
+    setSuccessMessage('');
+    
     try {
-      // ここでAIによるレポート生成を実行
+      // AIによるレポート生成を実行
       const response = await fetch('/api/generate-report', {
         method: 'POST',
         headers: {
@@ -65,26 +89,69 @@ const ReportGenerator: React.FC = () => {
         body: JSON.stringify({
           template: selectedTemplate,
           content: reportContent,
+          prompt: customPrompt // カスタムプロンプトがあれば送信
         }),
       });
       
+      if (!response.ok) {
+        throw new Error(`API エラー: ${response.status}`);
+      }
+      
       const data = await response.json();
       setGeneratedReport(data.report);
+      setSuccessMessage('レポートが正常に生成されました');
     } catch (error) {
       console.error('Error generating report:', error);
-      setGeneratedReport('レポートの生成中にエラーが発生しました。');
+      setErrorMessage(`レポートの生成中にエラーが発生しました: ${error.message}`);
+      setGeneratedReport('');
     } finally {
       setLoading(false);
     }
   };
 
+  const handleCustomPromptChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCustomPrompt(e.target.value);
+  };
+
+  const handleSaveReport = () => {
+    if (!generatedReport) {
+      setErrorMessage('保存するレポートがありません');
+      return;
+    }
+    
+    // レポートをテキストファイルとしてダウンロード
+    const blob = new Blob([generatedReport], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `report-${new Date().toISOString().slice(0, 10)}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    setSuccessMessage('レポートが保存されました');
+  };
+
   return (
     <Box sx={{ p: 3 }}>
       <Grid container spacing={3}>
+        {errorMessage && (
+          <Grid item xs={12}>
+            <Alert severity="error">{errorMessage}</Alert>
+          </Grid>
+        )}
+        
+        {successMessage && (
+          <Grid item xs={12}>
+            <Alert severity="success">{successMessage}</Alert>
+          </Grid>
+        )}
+        
         <Grid item xs={12}>
           <FormControl fullWidth>
             <InputLabel>レポートテンプレート</InputLabel>
-            <Select
+            <Select<string>
               value={selectedTemplate}
               onChange={handleTemplateChange}
               label="レポートテンプレート"
@@ -97,6 +164,18 @@ const ReportGenerator: React.FC = () => {
             </Select>
           </FormControl>
         </Grid>
+        
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="追加指示（オプション）"
+            placeholder="例: 2023年6月15日に発生した異常振動の事故レポートを作成して"
+            value={customPrompt}
+            onChange={handleCustomPromptChange}
+            variant="outlined"
+          />
+        </Grid>
+        
         <Grid item xs={12}>
           <TextField
             fullWidth
@@ -108,16 +187,27 @@ const ReportGenerator: React.FC = () => {
             onChange={(e) => setReportContent(e.target.value)}
           />
         </Grid>
+        
         <Grid item xs={12}>
-          <Button
-            variant="contained"
-            onClick={handleGenerateReport}
-            disabled={loading || !selectedTemplate}
-            sx={{ mr: 2 }}
-          >
-            {loading ? <CircularProgress size={24} /> : 'レポート生成'}
-          </Button>
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <Button
+              variant="contained"
+              onClick={handleGenerateReport}
+              disabled={loading || !selectedTemplate}
+            >
+              {loading ? <CircularProgress size={24} /> : 'AIでレポート生成'}
+            </Button>
+            
+            <Button
+              variant="outlined"
+              onClick={handleSaveReport}
+              disabled={!generatedReport}
+            >
+              レポートを保存
+            </Button>
+          </Box>
         </Grid>
+        
         <Grid item xs={12}>
           <Paper elevation={3} sx={{ p: 2, minHeight: '300px' }}>
             <Typography variant="h6" gutterBottom>
