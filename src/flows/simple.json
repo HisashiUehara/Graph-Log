@@ -1,0 +1,36 @@
+{
+  "version": 0.5,
+  "nodes": {
+    "source": {
+      "value": {
+        "query": "テストクエリ",
+        "param1": "テストパラメータ1",
+        "param2": "テストパラメータ2"
+      }
+    },
+    "echo": {
+      "agent": "copyAgent",
+      "inputs": {
+        "input": ":source.query",
+        "param1": ":source.param1",
+        "param2": ":source.param2"
+      }
+    },
+    "template": {
+      "agent": "stringTemplateAgent",
+      "inputs": {
+        "template": "クエリ: ${input}\nパラメータ1: ${param1}\nパラメータ2: ${param2}",
+        "input": ":echo.input",
+        "param1": ":echo.param1",
+        "param2": ":echo.param2"
+      }
+    },
+    "result": {
+      "agent": "copyAgent",
+      "inputs": {
+        "content": ":template.content"
+      },
+      "isResult": true
+    }
+  }
+} 

@@ -1,0 +1,40 @@
+{
+  "version": 0.5,
+  "nodes": {
+    "source": {
+      "value": {
+        "query": "",
+        "logData": "",
+        "mediaFiles": [],
+        "requestType": "analyze"
+      }
+    },
+    "logAnalysis": {
+      "agent": "logAnalysisAgent",
+      "inputs": {
+        "log": ":source.logData",
+        "query": "Analyze this log data and extract key information, errors, and patterns"
+      },
+      "if": ":source.logData",
+      "isResult": true
+    },
+    "knowledgeSearch": {
+      "agent": "embeddingAgent",
+      "inputs": {
+        "query": ":source.query",
+        "documents": []
+      },
+      "if": ":source.query",
+      "isResult": true
+    },
+    "summary": {
+      "agent": "copyAgent",
+      "inputs": {
+        "logAnalysis": ":logAnalysis",
+        "knowledgeSearch": ":knowledgeSearch",
+        "requestType": ":source.requestType"
+      },
+      "isResult": true
+    }
+  }
+} 

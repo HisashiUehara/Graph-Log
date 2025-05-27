@@ -1,0 +1,45 @@
+{
+  "version": 0.5,
+  "nodes": {
+    "source": {
+      "value": {
+        "log": "",
+        "query": "ログに含まれるエラーを分析してください"
+      }
+    },
+    "analyze": {
+      "agent": "logAnalysisAgent",
+      "inputs": {
+        "log": ":source.log",
+        "query": ":source.query"
+      }
+    },
+    "addContext": {
+      "agent": "knowledgeAgent",
+      "inputs": {
+        "query": "${highlights}に関する一般的な解決策",
+        "highlights": ":analyze.highlights"
+      }
+    },
+    "formatOutput": {
+      "agent": "stringTemplateAgent",
+      "inputs": {
+        "template": "# ログ分析結果\n\n## 概要\n${content}\n\n## 検出されたエラー\n${highlightsList}\n\n## 解決策の提案\n${knowledge}\n\n## 分析タイムスタンプ\n${timestamp}",
+        "content": ":analyze.content",
+        "highlightsList": ":analyze.highlights.join('\n- ')",
+        "knowledge": ":addContext.content",
+        "timestamp": ":analyze.timestamp"
+      }
+    },
+    "result": {
+      "agent": "copyAgent",
+      "inputs": {
+        "content": ":formatOutput.content",
+        "highlights": ":analyze.highlights",
+        "timestamp": ":analyze.timestamp",
+        "suggestedSolutions": ":addContext.content"
+      },
+      "isResult": true
+    }
+  }
+} 

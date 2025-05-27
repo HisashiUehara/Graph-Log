@@ -1,0 +1,45 @@
+{
+  "version": 0.5,
+  "nodes": {
+    "source": {
+      "value": {
+        "query": "",
+        "logData": "",
+        "requestType": "analyze"
+      }
+    },
+    "logProcessor": {
+      "agent": "stringTemplateAgent",
+      "inputs": {
+        "logData": ":source.logData",
+        "query": ":source.query"
+      },
+      "params": {
+        "template": "ログデータ: ${logData}\n\n質問: ${query}\n\n分析結果: ログデータを確認しました。"
+      },
+      "if": ":source.logData",
+      "isResult": true
+    },
+    "queryProcessor": {
+      "agent": "copyAgent",
+      "inputs": {
+        "query": ":source.query",
+        "type": "query_response"
+      },
+      "if": ":source.query",
+      "isResult": true
+    },
+    "summary": {
+      "agent": "copyAgent",
+      "inputs": {
+        "logProcessor": ":logProcessor",
+        "queryProcessor": ":queryProcessor",
+        "metadata": {
+          "timestamp": "2025-01-25T12:00:00Z",
+          "status": "completed"
+        }
+      },
+      "isResult": true
+    }
+  }
+} 

@@ -1,0 +1,72 @@
+{
+  "version": 0.5,
+  "nodes": {
+    "source": {
+      "value": {
+        "query": "自動運転の安全性について教えてください",
+        "documents": [
+          {
+            "title": "自動運転技術の概要",
+            "content": "自動運転技術は、センサー、AI、制御システムを組み合わせて車両を操作する技術です。レベル1からレベル5まで段階があり、レベル5が完全自動運転を意味します。",
+            "metadata": {
+              "source": "技術白書2023",
+              "relevance": 0.85
+            }
+          },
+          {
+            "title": "自動運転の安全基準",
+            "content": "自動運転車の安全基準には、センサー冗長性、フェイルセーフ機構、サイバーセキュリティ対策が含まれます。緊急時の手動操作への移行も重要な要素です。",
+            "metadata": {
+              "source": "安全規格ガイドライン",
+              "relevance": 0.92
+            }
+          }
+        ]
+      }
+    },
+    "documentProcessor": {
+      "agent": "copyAgent",
+      "inputs": {
+        "query": ":source.query",
+        "documents": ":source.documents"
+      }
+    },
+    "contextBuilder": {
+      "agent": "stringTemplateAgent",
+      "inputs": {
+        "template": "## 関連情報:\n\n${documentSummaries}\n\n## ユーザーの質問:\n${query}",
+        "query": ":documentProcessor.query",
+        "documentSummaries": ":documentProcessor.documents"
+      }
+    },
+    "llmResponse": {
+      "agent": "openAIAgent",
+      "inputs": {
+        "system": "あなたは自動運転技術の専門家です。ユーザーの質問に対して、提供された関連情報を参照しながら、わかりやすく正確に回答してください。情報源も明記してください。",
+        "prompt": ":contextBuilder.content"
+      },
+      "params": {
+        "model": "gpt-4-turbo-preview",
+        "temperature": 0.3
+      }
+    },
+    "formatResult": {
+      "agent": "stringTemplateAgent",
+      "inputs": {
+        "template": "# 回答\n\n${response}\n\n---\n\n*この回答は ${date} に生成されました*",
+        "response": ":llmResponse.text",
+        "date": "${@now}"
+      }
+    },
+    "result": {
+      "agent": "copyAgent",
+      "inputs": {
+        "content": ":formatResult.content",
+        "rawResponse": ":llmResponse.text",
+        "query": ":source.query",
+        "documents": ":source.documents"
+      },
+      "isResult": true
+    }
+  }
+} 

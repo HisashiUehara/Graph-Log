@@ -1,0 +1,52 @@
+{
+  "version": 0.5,
+  "nodes": {
+    "source": {
+      "value": {
+        "template": "# 点検報告書\n\n## 概要\n${summary}\n\n## 実施日時\n${date}\n\n## 担当者\n${author}\n\n## 詳細\n${details}",
+        "conversation": {
+          "messages": []
+        },
+        "defaultValues": {
+          "author": "フィールドエンジニア",
+          "date": "2023-04-01",
+          "summary": "",
+          "details": ""
+        }
+      }
+    },
+    "analyzeConversation": {
+      "agent": "openAIAgent",
+      "inputs": {
+        "system": "あなたは会話からレポートに必要な情報を抽出する専門家です。フィールドエンジニアの点検内容から、概要と詳細情報を抽出してください。",
+        "prompt": "次の会話から、「summary」（簡潔な要約）と「details」（詳細な説明）を抽出してJSON形式で返してください。\n\n会話:\n${conversationText}",
+        "conversationText": ":source.conversation"
+      }
+    },
+    "extractInfo": {
+      "agent": "stringTemplateAgent",
+      "inputs": {
+        "template": "${response.text}",
+        "response": ":analyzeConversation"
+      }
+    },
+    "createReport": {
+      "agent": "reportAgent",
+      "inputs": {
+        "template": ":source.template",
+        "conversation": ":source.conversation",
+        "defaultValues": ":source.defaultValues",
+        "extractedInfo": ":extractInfo.content"
+      }
+    },
+    "result": {
+      "agent": "copyAgent",
+      "inputs": {
+        "content": ":createReport.content",
+        "metadata": ":createReport.metadata",
+        "extractedInfo": ":createReport.extractedInfo"
+      },
+      "isResult": true
+    }
+  }
+} 

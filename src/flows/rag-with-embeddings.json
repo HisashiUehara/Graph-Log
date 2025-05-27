@@ -1,0 +1,92 @@
+{
+  "version": 0.5,
+  "nodes": {
+    "source": {
+      "value": {
+        "query": "自動運転技術の安全性について教えてください",
+        "documents": [
+          {
+            "title": "自動運転技術の概要",
+            "content": "自動運転技術は、センサー、AI、制御システムを組み合わせて車両を操作する技術です。レベル1からレベル5まで段階があり、レベル5が完全自動運転を意味します。各レベルでは人間の関与度が異なります。",
+            "metadata": {
+              "source": "技術白書2023",
+              "date": "2023-05-15"
+            }
+          },
+          {
+            "title": "自動運転の安全基準",
+            "content": "自動運転車の安全基準には、センサー冗長性、フェイルセーフ機構、サイバーセキュリティ対策が含まれます。緊急時の手動操作への移行も重要な要素です。国際標準化機構(ISO)は自動運転システムの安全性に関するガイドラインを発行しています。",
+            "metadata": {
+              "source": "安全規格ガイドライン",
+              "date": "2023-08-22"
+            }
+          },
+          {
+            "title": "自動運転の事故事例",
+            "content": "過去5年間で自動運転機能が関与した事故は全体の0.1%未満です。そのほとんどはレベル2の部分自動運転機能使用時に発生しており、ドライバーの注意散漫が主な原因とされています。完全自動運転車両の事故率は人間が運転する車両よりも低い傾向にあります。",
+            "metadata": {
+              "source": "交通安全レポート2023",
+              "date": "2023-11-30"
+            }
+          },
+          {
+            "title": "自動運転と法規制",
+            "content": "自動運転車の公道走行には各国で異なる法規制が適用されます。日本では2020年に改正道路交通法が施行され、特定条件下でのレベル3自動運転が許可されました。責任の所在や保険制度も重要な法的課題となっています。",
+            "metadata": {
+              "source": "法律レビュー",
+              "date": "2023-10-05"
+            }
+          }
+        ]
+      }
+    },
+    "embedding": {
+      "agent": "embeddingAgent",
+      "inputs": {
+        "query": ":source.query",
+        "documents": ":source.documents",
+        "topK": 2
+      },
+      "params": {
+        "model": "text-embedding-3-small"
+      }
+    },
+    "contextBuilder": {
+      "agent": "stringTemplateAgent",
+      "inputs": {
+        "template": "## 関連情報:\n\n${relevantDocumentsFormatted}\n\n## ユーザーの質問:\n${query}",
+        "query": ":embedding.query",
+        "relevantDocumentsFormatted": ":embedding.relevantDocuments"
+      }
+    },
+    "llmResponse": {
+      "agent": "openAIAgent",
+      "inputs": {
+        "system": "あなたは自動運転技術の専門家です。ユーザーの質問に対して、提供された関連情報を参照しながら、わかりやすく正確に回答してください。情報源も明記してください。提供された情報にない詳細については、控えめに推測することは許容されますが、明確にそれが推測であることを示してください。",
+        "prompt": ":contextBuilder.content"
+      },
+      "params": {
+        "model": "gpt-4-turbo-preview",
+        "temperature": 0.3
+      }
+    },
+    "formatResult": {
+      "agent": "stringTemplateAgent",
+      "inputs": {
+        "template": "# 回答\n\n${response}\n\n---\n\n*この回答は ${date} に生成されました*",
+        "response": ":llmResponse.text",
+        "date": "${@now}"
+      }
+    },
+    "result": {
+      "agent": "copyAgent",
+      "inputs": {
+        "content": ":formatResult.content",
+        "rawResponse": ":llmResponse.text",
+        "query": ":source.query",
+        "relevantDocuments": ":embedding.relevantDocuments"
+      },
+      "isResult": true
+    }
+  }
+} 

@@ -1,0 +1,26 @@
+{
+  "version": 0.5,
+  "nodes": {
+    "source": {
+      "value": {
+        "name": "ユーザー",
+        "message": "こんにちは"
+      }
+    },
+    "template": {
+      "agent": "stringTemplateAgent",
+      "inputs": {
+        "template": "${message}、${name}さん！GraphAIワークフローからの応答です。",
+        "message": ":source.message",
+        "name": ":source.name"
+      }
+    },
+    "result": {
+      "agent": "copyAgent",
+      "inputs": {
+        "content": ":template.content"
+      },
+      "isResult": true
+    }
+  }
+} 

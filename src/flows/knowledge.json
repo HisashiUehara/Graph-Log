@@ -3,96 +3,42 @@
   "nodes": {
     "source": {
       "value": {
-        "query": "",
-        "context": ""
+        "query": "ネットワークケーブルの種類と用途について",
+        "context": "データセンターのケーブル管理"
       }
     },
-    "knowledge": {
+    "search": {
       "agent": "knowledgeAgent",
       "inputs": {
         "query": ":source.query",
         "context": ":source.context"
       }
     },
-    "errorCheck": {
-      "agent": "conditionalAgent",
-      "inputs": {
-        "condition": ":knowledge.error",
-        "ifTrue": {
-          "answer": ":knowledge.error",
-          "success": false
-        },
-        "ifFalse": {
-          "content": ":knowledge.content",
-          "success": true
-        }
-      }
-    },
-    "chunks": {
-      "agent": "stringSplitterAgent",
-      "inputs": {
-        "text": ":errorCheck.content"
-      },
-      "params": {
-        "maxLength": 1000
-      },
-      "skipIf": "!:errorCheck.success"
-    },
-    "chunkEmbeddings": {
-      "agent": "stringEmbeddingsAgent",
-      "inputs": {
-        "array": ":chunks.contents"
-      },
-      "params": {
-        "model": "text-embedding-3-small"
-      },
-      "skipIf": "!:errorCheck.success"
-    },
-    "queryEmbedding": {
-      "agent": "stringEmbeddingsAgent",
-      "inputs": {
-        "item": ":source.query"
-      },
-      "params": {
-        "model": "text-embedding-3-small"
-      },
-      "skipIf": "!:errorCheck.success"
-    },
-    "similarities": {
-      "agent": "dotProductAgent",
-      "inputs": {
-        "matrix": ":chunkEmbeddings",
-        "vector": ":queryEmbedding.$0"
-      },
-      "skipIf": "!:errorCheck.success"
-    },
-    "relevantChunks": {
-      "agent": "sortByValuesAgent",
-      "inputs": {
-        "array": ":chunks.contents",
-        "values": ":similarities"
-      },
-      "skipIf": "!:errorCheck.success"
-    },
-    "context": {
-      "agent": "tokenBoundStringsAgent",
-      "inputs": {
-        "chunks": ":relevantChunks"
-      },
-      "params": {
-        "limit": 2000
-      },
-      "skipIf": "!:errorCheck.success"
-    },
-    "answer": {
+    "enhance": {
       "agent": "openAIAgent",
       "inputs": {
-        "system": "You are a helpful assistant. Answer the question based on the provided context.",
-        "prompt": ":source.query",
-        "context": ":errorCheck.success ? :context.content : :errorCheck.answer"
-      },
-      "params": {
-        "model": "gpt-4-turbo-preview"
+        "system": "あなたは技術情報を明確に説明する専門家です。与えられた情報を整理し、読みやすく、わかりやすいフォーマットで提供してください。",
+        "prompt": "以下の技術情報を整理して、見出し、箇条書き、表などを使って読みやすくしてください。特に現場のエンジニアにとって役立つ情報を強調してください。\n\n${content}",
+        "content": ":search.content"
+      }
+    },
+    "format": {
+      "agent": "stringTemplateAgent",
+      "inputs": {
+        "template": "# 知識ベース検索結果\n\n## クエリ\n${query}\n\n## コンテキスト\n${context}\n\n## 検索結果\n${enhancedContent}\n\n## 情報ソース\n${source}",
+        "query": ":source.query",
+        "context": ":source.context",
+        "enhancedContent": ":enhance.text",
+        "source": ":search.source"
+      }
+    },
+    "result": {
+      "agent": "copyAgent",
+      "inputs": {
+        "content": ":format.content",
+        "originalContent": ":search.content",
+        "enhancedContent": ":enhance.text",
+        "source": ":search.source"
       },
       "isResult": true
     }

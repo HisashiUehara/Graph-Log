@@ -1,0 +1,17 @@
+{
+  "version": 0.5,
+  "nodes": {
+    "source": {
+      "value": {
+        "message": "test"
+      }
+    },
+    "result": {
+      "agent": "copyAgent",
+      "inputs": {
+        "source": ":source"
+      },
+      "isResult": true
+    }
+  }
+} 
