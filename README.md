@@ -1,246 +1,322 @@
-# Graph-Log AI Assistant 🎤🧠
+# 🎨 Graph-Log: AI-Powered Field Engineering Assistant
 
-A sophisticated Voice-Enabled AI Assistant for Field Engineers with RAG (Retrieval-Augmented Generation) capabilities, powered by GraphAI 2.0.5 and OpenAI APIs.
+<div align="center">
 
-## 🌟 Features
+![Graph-Log Banner](https://img.shields.io/badge/Graph--Log-AI%20Assistant-emerald?style=for-the-badge&logo=robot)
 
-### 🎤 Voice Interface
+**A sophisticated Voice-Enabled AI Assistant for Field Engineers with RAG capabilities**
+
+[![Next.js](https://img.shields.io/badge/Next.js-14.0+-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4-green?style=flat-square&logo=openai)](https://openai.com/)
+[![GraphAI](https://img.shields.io/badge/GraphAI-2.0.5-purple?style=flat-square)](https://github.com/receptron/graphai)
+
+[🚀 Quick Start](#-quick-start) • [📖 Documentation](#-features) • [🎬 Demo](#-usage-examples) • [🤝 Contributing](#-contributing)
+
+</div>
+
+---
+
+## 🌟 What is Graph-Log?
+
+**Graph-Log** is a next-generation AI assistant designed specifically for field engineers who need intelligent, voice-enabled log analysis and knowledge management in their daily operations.
+
+### 🎯 Why Graph-Log?
+
+In the field engineering world, you need:
+- ⚡ **Instant Analysis**: Quick insights from complex log data
+- 🎤 **Hands-Free Operation**: Voice input when your hands are busy
+- 🧠 **Smart Memory**: AI that remembers and learns from your data
+- 📊 **Professional Reports**: Generate reports for stakeholders
+- 🔍 **Intelligent Search**: Find relevant information from historical data
+
+Graph-Log delivers all of this in a beautiful, modern interface.
+
+---
+
+## ✨ Features
+
+### 🎤 **Voice-First Interface**
 - **Speech-to-Text**: Real-time voice input using OpenAI Whisper
-- **Text-to-Speech**: Audio playback of results using OpenAI TTS
-- **Audio Monitoring**: Real-time audio level visualization
-- **Multi-language Support**: Japanese and English voice processing
+- **Text-to-Speech**: Audio playback of analysis results
+- **Audio Monitoring**: Live audio level visualization
+- **Multi-language Support**: English and Japanese processing
 
-### 🧠 RAG System
-- **Automatic Data Ingestion**: All user inputs are automatically stored
+### 🧠 **Advanced RAG System**
+- **Automatic Data Ingestion**: All inputs automatically stored and indexed
 - **Vector Embeddings**: OpenAI text-embedding-3-small for semantic search
 - **Similarity Search**: Cosine similarity-based document retrieval
-- **Context-Aware Responses**: GPT-4 powered responses with relevant context
+- **Context-Aware Responses**: GPT-4 powered intelligent responses
 
-### 📊 Analysis Modules
-- **Simple Analysis**: Basic log processing and template generation
-- **Advanced Analysis**: Complex workflow with error detection and reporting
-- **Report Generation**: Standalone report creation from analysis data
+### 📊 **Analysis Modules**
+- **Simple Analysis**: Quick log processing and insights
+- **Report Generation**: Professional reports from analysis data
 - **RAG Search**: Query historical data with semantic understanding
+- **Hybrid RAG**: Advanced multi-modal knowledge management
 
-### 🎨 Modern UI
+### 🎨 **Modern UI/UX**
+- **Beautiful Gradient Design**: Eye-catching rainbow gradients with animations
 - **Shadcn UI Components**: Clean, accessible, and customizable
-- **Tailwind CSS**: Responsive design with modern styling
-- **Tab Navigation**: Intuitive interface for different functions
-- **Real-time Statistics**: Live RAG statistics and user information
+- **Responsive Design**: Works perfectly on desktop and mobile
+- **Real-time Statistics**: Live RAG statistics and system status
+
+---
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 18+ 
-- OpenAI API Key (get from https://platform.openai.com/api-keys)
 
-### Installation
+```bash
+# Required
+Node.js 18+
+OpenAI API Key (get from https://platform.openai.com/api-keys)
+```
 
-1. **Clone the repository**
+### ⚡ 3-Step Installation
+
+1. **Clone & Install**
    ```bash
    git clone https://github.com/HisashiUehara/Graph-Log.git
    cd Graph-Log
-   ```
-
-2. **Install dependencies**
-   ```bash
    npm install
    ```
 
-3. **⚠️ IMPORTANT: Environment Setup**
-   
-   **You MUST set your OpenAI API key in the .env file:**
-   
-```bash
-   # Edit the .env file and replace the placeholder with your actual API key
-   # Open .env file in your editor and change:
-   # FROM: OPENAI_API_KEY=your_openai_api_key_here
-   # TO:   OPENAI_API_KEY=sk-your-actual-api-key-here
-   ```
-   
-   **Your .env file should look like this:**
-   ```
-   OPENAI_API_KEY=sk-your-actual-api-key-here
-   NEXT_PUBLIC_APP_URL=http://localhost:3000
-   NODE_ENV=development
-   ```
-
-4. **Start the development server**
+2. **⚠️ Setup Environment (CRITICAL)**
    ```bash
-npm run dev
-```
+   # Create .env file with your OpenAI API key
+   echo "OPENAI_API_KEY=sk-your-actual-api-key-here" > .env
+   echo "NEXT_PUBLIC_APP_URL=http://localhost:3000" >> .env
+   echo "NODE_ENV=development" >> .env
+   ```
 
-5. **Access the application**
-   - Open http://localhost:3000 (or the next available port)
-   - Allow microphone access for voice features
+3. **Launch**
+   ```bash
+   npm run dev
+   # Open http://localhost:3000
+   ```
 
-### 🚨 Troubleshooting
+### 🎉 You're Ready!
 
-**If you see "OPENAI_API_KEY environment variable is missing" error:**
-
-1. Check your .env file exists in the project root
-2. Ensure your API key starts with "sk-"
-3. Restart the development server after changing .env
-4. Make sure there are no spaces around the = sign in .env
-
-**Example of correct .env file:**
-```
-OPENAI_API_KEY=sk-proj-abcd1234...
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-NODE_ENV=development
-```
-
-## 🏗️ Architecture
-
-### Tech Stack
-- **Frontend**: React + Next.js + TypeScript
-- **UI Library**: Shadcn UI + Tailwind CSS
-- **AI Framework**: GraphAI 2.0.5
-- **AI Services**: OpenAI (GPT-4, Whisper, TTS, Embeddings)
-- **Backend**: Next.js API Routes
-
-### Project Structure
-```
-src/
-├── components/
-│   ├── ui/                 # Shadcn UI components
-│   └── VoiceInterface.tsx  # Voice recording/playback
-├── lib/
-│   ├── services/           # AI and voice services
-│   ├── utils/              # GraphAI manager and utilities
-│   └── types/              # TypeScript definitions
-├── pages/
-│   ├── api/                # API endpoints
-│   └── index.tsx           # Main application
-├── flows/                  # GraphAI workflow definitions
-└── styles/                 # Global styles and Tailwind config
-```
-
-## 🔧 API Endpoints
-
-### Core Analysis
-- `POST /api/simple-field-engineer` - Basic log analysis
-- `POST /api/advanced-field-engineer` - Advanced analysis workflow
-- `POST /api/report-generator` - Generate reports from analysis data
-
-### Voice Features
-- `POST /api/speech-to-text` - Convert audio to text
-- `POST /api/text-to-speech` - Convert text to audio
-
-### RAG System
-- `POST /api/rag-search` - Add documents to RAG
-- `GET /api/rag-search` - Search similar documents
-- `POST /api/rag-response` - Generate RAG-powered responses
-
-## 🎯 Usage Examples
-
-### 1. Voice-Powered Log Analysis
-1. Click the microphone button
-2. Speak your query: "Analyze this error log for memory issues"
-3. Paste or upload your log data
-4. Get voice and text results
-
-### 2. RAG-Enhanced Troubleshooting
-1. Use the system to analyze various logs over time
-2. Switch to RAG Search tab
-3. Ask: "What similar memory issues have we seen before?"
-4. Get context-aware responses from historical data
-
-### 3. Report Generation
-1. Complete a log analysis
-2. Switch to Report Generation tab
-3. Generate formatted reports for documentation
-4. Listen to reports via text-to-speech
-
-## 🔄 GraphAI Workflows
-
-### Simple Analysis Workflow
-```json
-{
-  "logSplitter": "stringSplitterAgent",
-  "errorFilter": "propertyFilterAgent", 
-  "logAnalysis": "stringTemplateAgent"
-}
-```
-
-### Advanced Analysis Workflow
-```json
-{
-  "logSplitter": "stringSplitterAgent",
-  "errorExtractor": "propertyFilterAgent",
-  "analysisEngine": "stringTemplateAgent",
-  "knowledgeIntegration": "copyAgent",
-  "finalReport": "stringTemplateAgent"
-}
-```
-
-## 📈 RAG Statistics
-
-The application tracks:
-- Total documents stored
-- Documents by type (log, query, report, analysis)
-- Recent document activity
-- User-specific data isolation
-
-## 🛠️ Development
-
-### Adding New Workflows
-1. Create JSON workflow in `src/flows/`
-2. Add API endpoint in `src/pages/api/`
-3. Update UI components as needed
-
-### Extending Voice Features
-1. Modify `src/lib/services/speechService.ts`
-2. Add new voice commands in `VoiceInterface.tsx`
-3. Update API endpoints for new voice features
-
-### Customizing RAG
-1. Adjust embedding models in `src/lib/services/ragService.ts`
-2. Modify similarity thresholds
-3. Add custom document filters
-
-## 🔐 Security & Privacy
-
-- API keys stored in environment variables
-- User data isolated by session ID
-- No persistent storage (in-memory RAG for demo)
-- Voice data processed via OpenAI APIs
-
-## 📚 Documentation
-
-Detailed documentation available in `/docs/`:
-- GraphAI concepts and usage
-- Agent explanations
-- Workflow structure
-- API documentation
-- Demo examples
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🙏 Acknowledgments
-
-- **GraphAI Team** for the powerful workflow framework
-- **OpenAI** for AI services (GPT-4, Whisper, TTS, Embeddings)
-- **Shadcn** for the beautiful UI components
-- **Vercel** for Next.js framework
-
-## 🔗 Links
-
-- [GraphAI Documentation](https://github.com/receptron/graphai)
-- [OpenAI API Documentation](https://platform.openai.com/docs)
-- [Shadcn UI Components](https://ui.shadcn.com/)
-- [Live Demo](http://localhost:3000) (when running locally)
+Visit **http://localhost:3000** and start analyzing logs with AI!
 
 ---
 
-**Built with ❤️ for Field Engineers who need intelligent, voice-enabled log analysis and knowledge management.** 
+## 🎬 Usage Examples
+
+### 1. 🎤 Voice-Powered Log Analysis
+```
+👤 [Click microphone] "Analyze this memory error log"
+🤖 "I found 3 critical memory issues. The system hit 95% memory usage at 14:30..."
+🔊 [Plays audio response]
+```
+
+### 2. 🧠 Smart Historical Search
+```
+👤 "What similar network issues have we seen before?"
+🤖 "Based on 47 previous logs, I found 3 similar network timeout patterns..."
+📈 Shows related incidents with timestamps and solutions
+```
+
+### 3. 📊 Automated Report Generation
+```
+📋 Analyzes: System logs → Memory issues detected
+📝 Generates: Professional incident report
+📧 Includes: Timeline, root cause, recommendations
+```
+
+---
+
+## 🏗️ Architecture
+
+### 🛠️ Tech Stack
+
+| Component | Technology | Purpose |
+|-----------|------------|---------|
+| **Frontend** | React + Next.js + TypeScript | Modern web interface |
+| **UI Library** | Shadcn UI + Tailwind CSS | Beautiful, accessible components |
+| **AI Framework** | GraphAI 2.0.5 | Workflow orchestration |
+| **AI Services** | OpenAI (GPT-4, Whisper, TTS) | Core AI capabilities |
+| **Backend** | Next.js API Routes | Serverless API endpoints |
+
+### 📁 Project Structure
+
+```
+Graph-Log/
+├── src/
+│   ├── components/          # UI components
+│   │   ├── ui/             # Shadcn UI components
+│   │   ├── VoiceInterface.tsx
+│   │   └── HybridRAGInterface.tsx
+│   ├── lib/
+│   │   ├── services/       # AI and voice services
+│   │   └── utils/          # Utilities and helpers
+│   ├── pages/
+│   │   ├── api/           # API endpoints
+│   │   ├── index.tsx      # Main application
+│   │   └── input-knowledge.tsx
+│   └── styles/            # Global styles
+├── docs/                  # Documentation
+└── README.md
+```
+
+---
+
+## 🔧 API Reference
+
+### Core Analysis Endpoints
+
+```typescript
+// Simple log analysis
+POST /api/simple-field-engineer
+{
+  "logData": "2024-01-25 ERROR Memory shortage...",
+  "query": "What caused this error?",
+  "userId": "user_001"
+}
+
+// Generate reports
+POST /api/report-generator
+{
+  "analysisData": { /* analysis results */ },
+  "reportType": "standard",
+  "userId": "user_001"
+}
+```
+
+### Voice & RAG Endpoints
+
+```typescript
+// Speech to text
+POST /api/speech-to-text
+FormData: { audio: File }
+
+// RAG search
+POST /api/rag-search
+{
+  "query": "network timeout issues",
+  "userId": "user_001",
+  "useIntelligentSearch": true
+}
+```
+
+---
+
+## 🎨 Customization
+
+### 🌈 Customize Graph-Log Title
+
+Edit `src/pages/index.tsx` around line 256:
+
+```typescript
+// Change colors
+background: 'linear-gradient(90deg, 
+  #your-color-1 0%, 
+  #your-color-2 50%, 
+  #your-color-3 100%)'
+
+// Change size
+fontSize: '6rem' // Make it bigger or smaller
+```
+
+### 🎯 Add Custom Analysis
+
+1. Create new workflow in `src/flows/`
+2. Add API endpoint in `src/pages/api/`
+3. Update UI components
+
+---
+
+## 🚨 Troubleshooting
+
+### Common Issues
+
+| Problem | Solution |
+|---------|----------|
+| ❌ "API key missing" | Check `.env` file has `OPENAI_API_KEY=sk-...` |
+| 🔇 No voice input | Allow microphone access in browser |
+| 🔄 Build errors | Run `npm install` and restart dev server |
+| 🌐 Can't access | Try http://localhost:3000 (not 3001/3002) |
+
+### 🔍 Debug Commands
+
+```bash
+# Test API key
+node test-api-key.js
+
+# Check environment
+npm run dev -- --verbose
+
+# Clear cache
+rm -rf .next node_modules
+npm install
+```
+
+---
+
+## 🎯 Roadmap
+
+### 🔜 Coming Soon
+- [ ] **Multi-User Support**: Team collaboration features
+- [ ] **Cloud Storage**: Persistent data storage
+- [ ] **Mobile App**: React Native companion
+- [ ] **Advanced Analytics**: Machine learning insights
+- [ ] **Integration APIs**: Slack, Teams, JIRA integration
+
+### 💡 Feature Requests
+Have an idea? [Open an issue](https://github.com/HisashiUehara/Graph-Log/issues) with the `enhancement` label!
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! 🎉
+
+### 🚀 Quick Contribution Guide
+
+1. **Fork** this repository
+2. **Create** a feature branch: `git checkout -b feature/amazing-feature`
+3. **Commit** your changes: `git commit -m 'Add amazing feature'`
+4. **Push** to branch: `git push origin feature/amazing-feature`
+5. **Open** a Pull Request
+
+### 🏷️ Good First Issues
+Look for issues labeled `good first issue` or `help wanted`.
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+Special thanks to:
+
+- **[GraphAI Team](https://github.com/receptron/graphai)** - Powerful workflow framework
+- **[OpenAI](https://openai.com)** - GPT-4, Whisper, TTS, and Embeddings APIs
+- **[Shadcn](https://ui.shadcn.com)** - Beautiful UI component library
+- **[Vercel](https://vercel.com)** - Next.js framework and hosting platform
+
+---
+
+## 🔗 Links & Resources
+
+- 📖 **[Live Demo](http://localhost:3000)** (when running locally)
+- 🛠️ **[GraphAI Documentation](https://github.com/receptron/graphai)**
+- 🤖 **[OpenAI API Documentation](https://platform.openai.com/docs)**
+- 🎨 **[Shadcn UI Components](https://ui.shadcn.com/)**
+- 💬 **[Discussions](https://github.com/HisashiUehara/Graph-Log/discussions)**
+
+---
+
+<div align="center">
+
+**Built with ❤️ for Field Engineers who need intelligent, voice-enabled analysis tools**
+
+⭐ **Star this repo if you find it useful!** ⭐
+
+[🐛 Report Bug](https://github.com/HisashiUehara/Graph-Log/issues) • [✨ Request Feature](https://github.com/HisashiUehara/Graph-Log/issues) • [💬 Discussions](https://github.com/HisashiUehara/Graph-Log/discussions)
+
+</div> 
