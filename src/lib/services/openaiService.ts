@@ -1,19 +1,16 @@
 import OpenAI from 'openai';
 import { UIConfig, UIComponent, UIType } from '../types/uiTypes';
 
-// OpenAI APIクライアントを初期化
-// 複数の一般的な環境変数名を試す
-const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY || 
-               process.env.OPENAI_API_KEY || 
-               process.env.NEXT_OPENAI_API_KEY || 
-               '';
+// OpenAI APIクライアントを初期化（サーバーサイドのみ）
+const apiKey = process.env.OPENAI_API_KEY;
 
-console.log('API Key available:', apiKey ? '✓ Yes' : '✗ No');
+if (!apiKey) {
+  console.error('OPENAI_API_KEY is not properly configured. Please set your OpenAI API key.');
+}
 
-const openai = new OpenAI({
+const openai = apiKey ? new OpenAI({
   apiKey,
-  dangerouslyAllowBrowser: true // ブラウザでの使用を許可（本番環境では非推奨）
-});
+}) : null;
 
 // システムプロンプト - LLMにUIコンポーネントの生成方法を説明
 const SYSTEM_PROMPT = `あなたはフィールドエンジニア向けのUIコンポーネントを生成するアシスタントです。
@@ -60,7 +57,7 @@ export class OpenAIService {
   static async generateUIComponents(prompt: string): Promise<UIConfig> {
     try {
       // APIキーが設定されているか確認
-      if (!apiKey) {
+      if (!apiKey || !openai) {
         console.warn('OpenAI APIキーが設定されていません。フォールバックUIを返します。');
         throw new Error('OpenAI APIキーが設定されていません');
       }

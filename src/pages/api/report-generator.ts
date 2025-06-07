@@ -19,6 +19,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'Analysis data is required' });
     }
 
+    // ユーザーの過去データを取得してレポートに反映
+    let historicalContext = '';
+    if (userId) {
+      const userLogs = RAGService.getUserDocuments(userId, 'log');
+      const userAnalyses = RAGService.getUserDocuments(userId, 'analysis');
+      
+      historicalContext = `
+【過去のログデータ】${userLogs.length}件
+【過去の分析結果】${userAnalyses.length}件
+
+最近の活動:
+${userAnalyses.slice(-3).map((doc, index) => 
+  `${index + 1}. ${doc.metadata.timestamp.split('T')[0]} - ${doc.content.substring(0, 100)}...`
+).join('\n')}
+`;
+    }
+
     // レポート生成用のワークフローデータ
     const reportWorkflow = {
       version: 0.5,
@@ -27,45 +44,83 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           value: {
             analysisData,
             reportType,
-            customTemplate: customTemplate || `# ${reportType === 'detailed' ? '詳細' : '標準'}レポート
-
-## 分析概要
-\${summary}
-
-## 主要な発見事項
-\${findings}
-
-## 推奨事項
-\${recommendations}
-
-## 生成日時
-\${timestamp}`,
+            timestamp: new Date().toLocaleString('ja-JP'),
+            reportDate: new Date().toLocaleDateString('ja-JP'),
+            historicalContext,
           }
         },
-        reportGenerator: {
+        businessReport: {
+          agent: 'openAIAgent',
+          inputs: {
+            messages: [
+              {
+                role: 'system',
+                content: `あなたは技術マネージャーとして、ログ分析結果を経営陣や関係部署向けの社内報告書に変換してください。
+
+【レポート要件】
+- ビジネスインパクトの明確化
+- 非技術者にも理解できる表現
+- 意思決定に必要な情報を簡潔に
+- リスクと投資対効果の明示
+- 具体的なタイムラインとコスト
+- 過去のデータとの比較・トレンド分析
+
+【構成】
+1. エグゼクティブサマリー（1分で読める概要）
+2. 現状評価（RED/YELLOW/GREEN評価）
+3. ビジネスインパクト分析
+4. 推奨アクション（優先度・予算・期間）
+5. リスクマトリクス
+6. トレンド分析（過去データとの比較）
+7. 次回確認予定`
+              },
+              {
+                role: 'user',
+                content: `以下の技術分析結果を、社内共有用のビジネスレポートに変換してください：
+
+【分析データ】
+${JSON.stringify(analysisData)}
+
+【レポートタイプ】
+${reportType}
+
+【過去データの文脈】
+${historicalContext}
+
+専門用語は避け、ビジネス価値とリスクを明確に示した報告書を作成してください。過去のデータがある場合は、トレンド分析も含めてください。`
+              }
+            ]
+          },
+          params: {
+            model: 'gpt-4',
+            temperature: 0.3,
+            max_tokens: 2500
+          }
+        },
+        formatReport: {
           agent: 'stringTemplateAgent',
           inputs: {
-            template: ':source.customTemplate',
-            summary: analysisData.summary || '分析データから概要を抽出',
-            findings: Array.isArray(analysisData.findings) 
-              ? analysisData.findings.join('\n- ') 
-              : analysisData.findings || '特記事項なし',
-            recommendations: Array.isArray(analysisData.recommendations)
-              ? analysisData.recommendations.join('\n- ')
-              : analysisData.recommendations || '推奨事項なし',
-            timestamp: new Date().toLocaleString('ja-JP'),
-          }
-        },
-        result: {
-          agent: 'copyAgent',
-          inputs: {
-            content: ':reportGenerator.content',
-            metadata: {
-              type: 'report',
-              reportType,
-              generatedAt: new Date().toISOString(),
-              userId,
-            }
+            content: ':businessReport.choices[0].message.content',
+            companyHeader: `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 システム運用状況レポート
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+作成日時: \${reportDate}
+レポートタイプ: \${reportType}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+            footer: `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+本レポートは Graph-Log AI Assistant により自動生成されました
+GraphAI 2.0.5 + OpenAI GPT-4 分析エンジン使用
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+            reportDate: ':source.reportDate',
+            reportType: ':source.reportType'
+          },
+          params: {
+            template: `\${companyHeader}
+
+\${content}
+
+\${footer}`
           },
           isResult: true
         }
@@ -81,13 +136,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // GraphAIの結果から適切にデータを取得
-    const reportContent = result.result.finalReport || 
+    const reportContent = (result.result as any).formatReport || 
+                         (result.result as any).businessReport?.choices?.[0]?.message?.content ||
+                         result.result.finalReport || 
                          result.result.answer || 
                          result.result.summary || 
                          'レポートの生成に失敗しました';
 
     // 生成されたレポートをRAGに保存
-    if (userId && reportContent) {
+    if (userId && reportContent && reportContent !== 'レポートの生成に失敗しました') {
       await RAGService.addDocument(reportContent, {
         source: 'report_generator',
         type: 'report',

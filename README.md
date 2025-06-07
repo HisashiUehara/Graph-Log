@@ -32,7 +32,7 @@ A sophisticated Voice-Enabled AI Assistant for Field Engineers with RAG (Retriev
 
 ### Prerequisites
 - Node.js 18+ 
-- OpenAI API Key
+- OpenAI API Key (get from https://platform.openai.com/api-keys)
 
 ### Installation
 
@@ -47,21 +47,48 @@ A sophisticated Voice-Enabled AI Assistant for Field Engineers with RAG (Retriev
    npm install
    ```
 
-3. **Environment Setup**
-   ```bash
-   cp .env.example .env
-   # Add your OpenAI API key to .env
-   OPENAI_API_KEY=your_openai_api_key_here
+3. **⚠️ IMPORTANT: Environment Setup**
+   
+   **You MUST set your OpenAI API key in the .env file:**
+   
+```bash
+   # Edit the .env file and replace the placeholder with your actual API key
+   # Open .env file in your editor and change:
+   # FROM: OPENAI_API_KEY=your_openai_api_key_here
+   # TO:   OPENAI_API_KEY=sk-your-actual-api-key-here
+   ```
+   
+   **Your .env file should look like this:**
+   ```
+   OPENAI_API_KEY=sk-your-actual-api-key-here
+   NEXT_PUBLIC_APP_URL=http://localhost:3000
+   NODE_ENV=development
    ```
 
 4. **Start the development server**
    ```bash
-   npm run dev
-   ```
+npm run dev
+```
 
 5. **Access the application**
    - Open http://localhost:3000 (or the next available port)
    - Allow microphone access for voice features
+
+### 🚨 Troubleshooting
+
+**If you see "OPENAI_API_KEY environment variable is missing" error:**
+
+1. Check your .env file exists in the project root
+2. Ensure your API key starts with "sk-"
+3. Restart the development server after changing .env
+4. Make sure there are no spaces around the = sign in .env
+
+**Example of correct .env file:**
+```
+OPENAI_API_KEY=sk-proj-abcd1234...
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NODE_ENV=development
+```
 
 ## 🏗️ Architecture
 

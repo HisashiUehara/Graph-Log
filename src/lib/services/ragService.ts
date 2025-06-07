@@ -139,22 +139,43 @@ export class RAGService {
   ): Promise<string> {
     try {
       // 関連ドキュメントを検索
-      const relevantDocs = await this.searchSimilarDocuments(query, 3, 0.6, 
+      const relevantDocs = await this.searchSimilarDocuments(query, 5, 0.5, 
         userId ? { userId } : undefined
       );
+
+      // ユーザーの全入力データも参考にする
+      const userDocs = userId ? this.getUserDocuments(userId) : [];
 
       // コンテキストを構築
       const context = relevantDocs
         .map(doc => `[${doc.metadata.type}] ${doc.content}`)
         .join('\n\n');
 
-      const defaultSystemPrompt = `あなたはフィールドエンジニア向けのAIアシスタントです。
-以下の関連情報を参考にして、ユーザーの質問に答えてください。
+      const userDataSummary = userDocs
+        .map(doc => `[${doc.metadata.type}] ${doc.content.substring(0, 200)}...`)
+        .join('\n');
 
+      const defaultSystemPrompt = `あなたは情報整理・要約の専門AIアシスタントです。
+
+**主な役割:**
+- ユーザーが過去に入力したログデータ、分析結果、レポートを総合的に整理
+- 複雑な技術情報をわかりやすく要約・説明
+- ユーザーの質問に対して、関連する情報を体系的にまとめて回答
+
+**回答スタイル:**
+- 簡潔で理解しやすい日本語
+- 重要なポイントを箇条書きで整理
+- 必要に応じて具体例を含める
+- 技術的な内容は専門用語を適切に説明
+
+**参考データ:**
 関連情報:
 ${context}
 
-回答は具体的で実用的なものにしてください。`;
+ユーザーの過去の入力データ:
+${userDataSummary}
+
+上記の情報を参考に、ユーザーの質問に対してわかりやすく整理された回答を提供してください。`;
 
       const response = await openai.chat.completions.create({
         model: 'gpt-4',
@@ -168,11 +189,11 @@ ${context}
             content: query,
           },
         ],
-        temperature: 0.7,
-        max_tokens: 1000,
+        temperature: 0.3,
+        max_tokens: 1500,
       });
 
-      return response.choices[0].message.content || '回答を生成できませんでした。';
+      return response.choices[0].message.content || '申し訳ございませんが、回答を生成できませんでした。';
     } catch (error) {
       console.error('RAG response generation error:', error);
       throw new Error('RAG回答の生成に失敗しました');

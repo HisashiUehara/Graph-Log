@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { SpeechService } from '../lib/services/speechService';
 
 interface VoiceInterfaceProps {
   onTranscription?: (text: string) => void;
@@ -42,10 +41,10 @@ export const VoiceInterface: React.FC<VoiceInterfaceProps> = ({
   // 録音開始
   const startRecording = async () => {
     try {
-      const mediaRecorder = await SpeechService.startRecording();
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
       
       // 音声レベル監視の設定
-      const stream = mediaRecorder.stream;
       audioContextRef.current = new AudioContext();
       const source = audioContextRef.current.createMediaStreamSource(stream);
       analyserRef.current = audioContextRef.current.createAnalyser();
@@ -64,9 +63,22 @@ export const VoiceInterface: React.FC<VoiceInterfaceProps> = ({
       mediaRecorder.onstop = async () => {
         setIsProcessing(true);
         try {
-          const audioFile = SpeechService.recordingToFile(audioChunksRef.current);
-          const transcription = await SpeechService.speechToText(audioFile);
-          onTranscription?.(transcription);
+          // 録音データをAPIに送信
+          const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+          const formData = new FormData();
+          formData.append('audio', audioBlob, 'recording.webm');
+
+          const response = await fetch('/api/speech-to-text', {
+            method: 'POST',
+            body: formData,
+          });
+
+          const data = await response.json();
+          if (data.success) {
+            onTranscription?.(data.transcription);
+          } else {
+            onError?.(data.error || '音声の文字起こしに失敗しました');
+          }
         } catch (error) {
           onError?.(`音声の文字起こしに失敗しました: ${error.message}`);
         } finally {
@@ -151,7 +163,7 @@ export const VoiceInterface: React.FC<VoiceInterfaceProps> = ({
             relative w-20 h-20 rounded-full border-4 transition-all duration-200
             ${isRecording 
               ? 'bg-red-500 border-red-600 animate-pulse' 
-              : 'bg-primary-500 border-primary-600 hover:bg-primary-600'
+              : 'bg-emerald-500 border-emerald-600 hover:bg-emerald-600'
             }
             ${isProcessing ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
             flex items-center justify-center text-white
