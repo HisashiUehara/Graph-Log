@@ -11,7 +11,7 @@
 [![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4-green?style=flat-square&logo=openai)](https://openai.com/)
 [![GraphAI](https://img.shields.io/badge/GraphAI-2.0.5-purple?style=flat-square)](https://github.com/receptron/graphai)
 
-[🚀 Quick Start](#-quick-start) • [📖 Documentation](#-features) • [🎬 Demo](#-usage-examples) • [🤝 Contributing](#-contributing)
+[🚀 Quick Start](#-quick-start) • [📖 Documentation](#-features) • [🎬 Demo](#-usage-examples)
 
 </div>
 
@@ -67,7 +67,6 @@ Graph-Log delivers all of this in a beautiful, modern interface.
 ### Prerequisites
 
 ```bash
-# Required
 Node.js 18+
 OpenAI API Key (get from https://platform.openai.com/api-keys)
 ```
@@ -81,7 +80,7 @@ OpenAI API Key (get from https://platform.openai.com/api-keys)
    npm install
    ```
 
-2. **⚠️ Setup Environment (CRITICAL)**
+2. **Setup Environment**
    ```bash
    # Create .env file with your OpenAI API key
    echo "OPENAI_API_KEY=sk-your-actual-api-key-here" > .env
@@ -89,7 +88,7 @@ OpenAI API Key (get from https://platform.openai.com/api-keys)
    echo "NODE_ENV=development" >> .env
    ```
 
-3. **Launch**
+3. **Start Development Server**
    ```bash
    npm run dev
    # Open http://localhost:3000
@@ -201,89 +200,6 @@ POST /api/rag-search
 
 ---
 
-## 🎨 Customization
-
-### 🌈 Customize Graph-Log Title
-
-Edit `src/pages/index.tsx` around line 256:
-
-```typescript
-// Change colors
-background: 'linear-gradient(90deg, 
-  #your-color-1 0%, 
-  #your-color-2 50%, 
-  #your-color-3 100%)'
-
-// Change size
-fontSize: '6rem' // Make it bigger or smaller
-```
-
-### 🎯 Add Custom Analysis
-
-1. Create new workflow in `src/flows/`
-2. Add API endpoint in `src/pages/api/`
-3. Update UI components
-
----
-
-## 🚨 Troubleshooting
-
-### Common Issues
-
-| Problem | Solution |
-|---------|----------|
-| ❌ "API key missing" | Check `.env` file has `OPENAI_API_KEY=sk-...` |
-| 🔇 No voice input | Allow microphone access in browser |
-| 🔄 Build errors | Run `npm install` and restart dev server |
-| 🌐 Can't access | Try http://localhost:3000 (not 3001/3002) |
-
-### 🔍 Debug Commands
-
-```bash
-# Test API key
-node test-api-key.js
-
-# Check environment
-npm run dev -- --verbose
-
-# Clear cache
-rm -rf .next node_modules
-npm install
-```
-
----
-
-## 🎯 Roadmap
-
-### 🔜 Coming Soon
-- [ ] **Multi-User Support**: Team collaboration features
-- [ ] **Cloud Storage**: Persistent data storage
-- [ ] **Mobile App**: React Native companion
-- [ ] **Advanced Analytics**: Machine learning insights
-- [ ] **Integration APIs**: Slack, Teams, JIRA integration
-
-### 💡 Feature Requests
-Have an idea? [Open an issue](https://github.com/HisashiUehara/Graph-Log/issues) with the `enhancement` label!
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! 🎉
-
-### 🚀 Quick Contribution Guide
-
-1. **Fork** this repository
-2. **Create** a feature branch: `git checkout -b feature/amazing-feature`
-3. **Commit** your changes: `git commit -m 'Add amazing feature'`
-4. **Push** to branch: `git push origin feature/amazing-feature`
-5. **Open** a Pull Request
-
-### 🏷️ Good First Issues
-Look for issues labeled `good first issue` or `help wanted`.
-
----
-
 ## 📄 License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
@@ -307,16 +223,4 @@ Special thanks to:
 - 🛠️ **[GraphAI Documentation](https://github.com/receptron/graphai)**
 - 🤖 **[OpenAI API Documentation](https://platform.openai.com/docs)**
 - 🎨 **[Shadcn UI Components](https://ui.shadcn.com/)**
-- 💬 **[Discussions](https://github.com/HisashiUehara/Graph-Log/discussions)**
-
----
-
-<div align="center">
-
-**Built with ❤️ for Field Engineers who need intelligent, voice-enabled analysis tools**
-
-⭐ **Star this repo if you find it useful!** ⭐
-
-[🐛 Report Bug](https://github.com/HisashiUehara/Graph-Log/issues) • [✨ Request Feature](https://github.com/HisashiUehara/Graph-Log/issues) • [💬 Discussions](https://github.com/HisashiUehara/Graph-Log/discussions)
-
-</div> 
+- 💬 **[Discussions](https://github.com/HisashiUehara/Graph-Log/discussions)** 
