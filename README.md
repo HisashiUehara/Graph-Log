@@ -210,7 +210,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 Special thanks to:
 
-- **[GraphAI Team](https://github.com/receptron/graphai)** - Powerful workflow framework
+- **[GraphAI Team](https://github.com/receptron/graphai)** - Declarative AI Workflow Engine
 - **[OpenAI](https://openai.com)** - GPT-4, Whisper, TTS, and Embeddings APIs
 - **[Shadcn](https://ui.shadcn.com)** - Beautiful UI component library
 - **[Vercel](https://vercel.com)** - Next.js framework and hosting platform
