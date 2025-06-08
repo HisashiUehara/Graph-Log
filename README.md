@@ -200,12 +200,6 @@ POST /api/rag-search
 
 ---
 
-## License
-
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
----
-
 ## Acknowledgments
 
 Special thanks to:
@@ -222,4 +216,10 @@ Special thanks to:
 - **[Live Demo](http://localhost:3000)** (when running locally)
 - **[GraphAI Documentation](https://github.com/receptron/graphai)**
 - **[OpenAI API Documentation](https://platform.openai.com/docs)**
-- **[Shadcn UI Components](https://ui.shadcn.com/)** 
+- **[Shadcn UI Components](https://ui.shadcn.com/)**
+
+---
+
+## License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details. 
