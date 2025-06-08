@@ -222,5 +222,4 @@ Special thanks to:
 - 📖 **[Live Demo](http://localhost:3000)** (when running locally)
 - 🛠️ **[GraphAI Documentation](https://github.com/receptron/graphai)**
 - 🤖 **[OpenAI API Documentation](https://platform.openai.com/docs)**
-- 🎨 **[Shadcn UI Components](https://ui.shadcn.com/)**
-- 💬 **[Discussions](https://github.com/HisashiUehara/Graph-Log/discussions)** 
+- 🎨 **[Shadcn UI Components](https://ui.shadcn.com/)** 
