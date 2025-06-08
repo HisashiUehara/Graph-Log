@@ -1,4 +1,4 @@
-# 🎨 Graph-Log: AI-Powered Field Engineering Assistant
+# Graph-Log: AI-Powered Field Engineering Assistant
 
 <div align="center">
 
@@ -11,50 +11,50 @@
 [![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4-green?style=flat-square&logo=openai)](https://openai.com/)
 [![GraphAI](https://img.shields.io/badge/GraphAI-2.0.5-purple?style=flat-square)](https://github.com/receptron/graphai)
 
-[🚀 Quick Start](#-quick-start) • [📖 Documentation](#-features) • [🎬 Demo](#-usage-examples)
+[Quick Start](#quick-start) • [Documentation](#features) • [Demo](#usage-examples)
 
 </div>
 
 ---
 
-## 🌟 What is Graph-Log?
+## What is Graph-Log?
 
 **Graph-Log** is a next-generation AI assistant designed specifically for field engineers who need intelligent, voice-enabled log analysis and knowledge management in their daily operations.
 
-### 🎯 Why Graph-Log?
+### Why Graph-Log?
 
 In the field engineering world, you need:
-- ⚡ **Instant Analysis**: Quick insights from complex log data
-- 🎤 **Hands-Free Operation**: Voice input when your hands are busy
-- 🧠 **Smart Memory**: AI that remembers and learns from your data
-- 📊 **Professional Reports**: Generate reports for stakeholders
-- 🔍 **Intelligent Search**: Find relevant information from historical data
+- **Instant Analysis**: Quick insights from complex log data
+- **Hands-Free Operation**: Voice input when your hands are busy
+- **Smart Memory**: AI that remembers and learns from your data
+- **Professional Reports**: Generate reports for stakeholders
+- **Intelligent Search**: Find relevant information from historical data
 
 Graph-Log delivers all of this in a beautiful, modern interface.
 
 ---
 
-## ✨ Features
+## Features
 
-### 🎤 **Voice-First Interface**
+### **Voice-First Interface**
 - **Speech-to-Text**: Real-time voice input using OpenAI Whisper
 - **Text-to-Speech**: Audio playback of analysis results
 - **Audio Monitoring**: Live audio level visualization
 - **Multi-language Support**: English and Japanese processing
 
-### 🧠 **Advanced RAG System**
+### **Advanced RAG System**
 - **Automatic Data Ingestion**: All inputs automatically stored and indexed
 - **Vector Embeddings**: OpenAI text-embedding-3-small for semantic search
 - **Similarity Search**: Cosine similarity-based document retrieval
 - **Context-Aware Responses**: GPT-4 powered intelligent responses
 
-### 📊 **Analysis Modules**
+### **Analysis Modules**
 - **Simple Analysis**: Quick log processing and insights
 - **Report Generation**: Professional reports from analysis data
 - **RAG Search**: Query historical data with semantic understanding
 - **Hybrid RAG**: Advanced multi-modal knowledge management
 
-### 🎨 **Modern UI/UX**
+### **Modern UI/UX**
 - **Beautiful Gradient Design**: Eye-catching rainbow gradients with animations
 - **Shadcn UI Components**: Clean, accessible, and customizable
 - **Responsive Design**: Works perfectly on desktop and mobile
@@ -62,7 +62,7 @@ Graph-Log delivers all of this in a beautiful, modern interface.
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -71,7 +71,7 @@ Node.js 18+
 OpenAI API Key (get from https://platform.openai.com/api-keys)
 ```
 
-### ⚡ 3-Step Installation
+### 3-Step Installation
 
 1. **Clone & Install**
    ```bash
@@ -94,40 +94,40 @@ OpenAI API Key (get from https://platform.openai.com/api-keys)
    # Open http://localhost:3000
    ```
 
-### 🎉 You're Ready!
+### You're Ready!
 
 Visit **http://localhost:3000** and start analyzing logs with AI!
 
 ---
 
-## 🎬 Usage Examples
+## Usage Examples
 
-### 1. 🎤 Voice-Powered Log Analysis
+### 1. Voice-Powered Log Analysis
 ```
-👤 [Click microphone] "Analyze this memory error log"
-🤖 "I found 3 critical memory issues. The system hit 95% memory usage at 14:30..."
-🔊 [Plays audio response]
-```
-
-### 2. 🧠 Smart Historical Search
-```
-👤 "What similar network issues have we seen before?"
-🤖 "Based on 47 previous logs, I found 3 similar network timeout patterns..."
-📈 Shows related incidents with timestamps and solutions
+[Click microphone] "Analyze this memory error log"
+"I found 3 critical memory issues. The system hit 95% memory usage at 14:30..."
+[Plays audio response]
 ```
 
-### 3. 📊 Automated Report Generation
+### 2. Smart Historical Search
 ```
-📋 Analyzes: System logs → Memory issues detected
-📝 Generates: Professional incident report
-📧 Includes: Timeline, root cause, recommendations
+"What similar network issues have we seen before?"
+"Based on 47 previous logs, I found 3 similar network timeout patterns..."
+Shows related incidents with timestamps and solutions
+```
+
+### 3. Automated Report Generation
+```
+Analyzes: System logs → Memory issues detected
+Generates: Professional incident report
+Includes: Timeline, root cause, recommendations
 ```
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
-### 🛠️ Tech Stack
+### Tech Stack
 
 | Component | Technology | Purpose |
 |-----------|------------|---------|
@@ -137,7 +137,7 @@ Visit **http://localhost:3000** and start analyzing logs with AI!
 | **AI Services** | OpenAI (GPT-4, Whisper, TTS) | Core AI capabilities |
 | **Backend** | Next.js API Routes | Serverless API endpoints |
 
-### 📁 Project Structure
+### Project Structure
 
 ```
 Graph-Log/
@@ -160,7 +160,7 @@ Graph-Log/
 
 ---
 
-## 🔧 API Reference
+## API Reference
 
 ### Core Analysis Endpoints
 
@@ -200,13 +200,13 @@ POST /api/rag-search
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 Special thanks to:
 
@@ -217,9 +217,9 @@ Special thanks to:
 
 ---
 
-## 🔗 Links & Resources
+## Links & Resources
 
-- 📖 **[Live Demo](http://localhost:3000)** (when running locally)
-- 🛠️ **[GraphAI Documentation](https://github.com/receptron/graphai)**
-- 🤖 **[OpenAI API Documentation](https://platform.openai.com/docs)**
-- 🎨 **[Shadcn UI Components](https://ui.shadcn.com/)** 
+- **[Live Demo](http://localhost:3000)** (when running locally)
+- **[GraphAI Documentation](https://github.com/receptron/graphai)**
+- **[OpenAI API Documentation](https://platform.openai.com/docs)**
+- **[Shadcn UI Components](https://ui.shadcn.com/)** 
